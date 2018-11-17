@@ -4,8 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-ansible = "*"
-oci = "*"
+#pyopenssl = ">=17.5.0"
+ansible = "==2.7.2"
+oci = "==2.1.1"
 
 [dev-packages]
 
