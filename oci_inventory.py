@@ -1,0 +1,1 @@
+oci-ansible-modules/inventory-script/oci_inventory.py

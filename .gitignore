@@ -4,3 +4,4 @@ secret*
 *.log
 .vscode
 *.cache
+fact_cache_folder/

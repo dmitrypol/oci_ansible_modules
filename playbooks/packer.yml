@@ -1,0 +1,62 @@
+---
+- name : instance image process
+  connection: local
+  hosts: localhost
+
+  vars_files:
+    - secret.yml
+    - vars.yml
+
+  vars:
+    instance_name: myinstance
+    image_name: myimage
+
+  tasks:
+
+  - name: launch an instance using an image
+    oci_instance:
+      name: "{{ instance_name }}"
+      compartment_id: "{{ compartment_id }}"
+      shape: "{{ shape }}"
+      state: present
+      availability_domain: "{{ availability_domain }}"
+      vnic:
+        subnet_id: "{{ subnet_id }}"
+      source_details:
+        source_type: image
+        image_id: "{{ image_id }}"
+      freeform_tags:
+        created_by: ansible
+        type: web
+    register: created_instance
+
+  - name: output created_instance
+    debug:
+      msg: "{{ created_instance }}"
+
+  - pause:
+
+  # provision the instances by installing packages, creating folders, etc.  Need to get IP addresses
+
+  - name: create an image
+    oci_image:
+      name: "{{ image_name }}"
+      compartment_id: "{{ compartment_id }}"
+      instance_id: "{{ created_instance['added_instances'][0]['id'] }}"
+    register: created_image
+
+  - name: output created_image
+    debug:
+      msg: "{{ created_image }}"
+
+  - pause:
+
+  - name: delete the instance
+    oci_instance:
+      id: "{{ created_instance['added_instances'][0]['id'] }}"
+      state: absent        
+
+  - name: delete the image
+    oci_image:
+      id: "{{ created_image['image']['id'] }}"
+      state: absent        
