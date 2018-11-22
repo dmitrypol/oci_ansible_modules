@@ -5,3 +5,7 @@ secret*
 .vscode
 *.cache
 fact_cache_folder/
+
+.terraform
+.terraform*
+terraform.*

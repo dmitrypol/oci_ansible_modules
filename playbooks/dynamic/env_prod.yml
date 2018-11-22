@@ -1,0 +1,8 @@
+---
+- name : provision prod servers
+  hosts: tag_env=prod
+    
+  tasks:
+
+  - debug:
+      msg: provisioning prod servers

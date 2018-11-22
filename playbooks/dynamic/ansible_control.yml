@@ -1,0 +1,71 @@
+---
+- name : provision ansible control server
+  hosts: tag_app_name=ansible, tag_server_role=control
+
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    
+  tasks:
+
+  - name: update repositories cache and install packages
+    become: yes
+    apt:
+      name: software-properties-common
+      update_cache: yes
+
+  - name: add ansible repo
+    become: yes
+    apt_repository:
+      repo: ppa:ansible/ansible
+
+  - name: install os packages
+    become: yes
+    package:
+      name: 
+        - ansible
+        - python-pip
+
+  - name: install python packages
+    become: yes
+    pip:
+      name:
+        - oci==2.1.1
+
+  - name: create directory to store ansible files
+    file:
+      path: ~/ansible/
+      state: directory
+
+  - name: upload files
+    copy:
+      src:  "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      mode: 0400
+    loop:
+      - {src: '~/.ssh/id_rsa',          dest: '~/.ssh/'}
+      - {src: '~/.oci/oci_api_key.pem', dest: '~/.oci/'}
+      - {src: '~/.oci/config',          dest: '~/.oci/'}
+      - {src: '~/github/oci_ansible_modules/playbooks/dynamic/',                    dest: '~/ansible/'}
+      - {src: '~/github/oci_ansible_modules/oci-ansible-modules/inventory-script/', dest: '~/ansible/'}
+
+  - name: set exec permissions on oci_inventory.py
+    file:
+      path: ~/ansible/oci_inventory.py
+      mode: u+x
+
+  - name: remove this playbook from the ansible control server
+    file:
+      path: ~/ansible/ansible_control.yml
+      state: absent
+
+  - name: create ansible.cfg
+    copy: 
+      content: "[defaults]\nhost_key_checking = False\nlog_path = ~/ansible.log"
+      dest: ~/ansible.cfg
+
+  - name: cron for running ansible-playbook
+    cron:
+      name: 'ansible-playbook'
+      minute: "*/5"
+      job: ansible-playbook -i ~/ansible/oci_inventory.py ~/ansible/*.yml -e 'ansible_python_interpreter=/usr/bin/python3'
+      state: present

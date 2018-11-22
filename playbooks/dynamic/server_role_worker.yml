@@ -1,0 +1,13 @@
+---
+- name : provision worker servers
+  hosts: tag_server_role=worker
+  become: yes
+    
+  tasks:
+
+  - name: install packages
+    apt:
+      name: 
+        - software-properties-common
+        - redis
+      update_cache: yes

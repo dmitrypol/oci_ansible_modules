@@ -1,0 +1,10 @@
+---
+- name : provision app1 servers
+  hosts: tag_app_name=app1
+    
+  tasks:
+
+  - name: create app directory
+    file:
+      path: ~/app1/
+      state: directory
