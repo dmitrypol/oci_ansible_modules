@@ -1,0 +1,17 @@
+---
+- name : provision prod servers
+  hosts: tag_env=prod
+  become: yes
+
+  vars_files:
+    - ../vars/prod_users.yml
+
+  tasks:
+  - import_tasks: import/create_delete_users.yml
+
+  handlers:
+
+  - name: restart_sshd
+    service:
+      name: sshd
+      state: restarted

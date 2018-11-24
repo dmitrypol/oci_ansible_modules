@@ -1,0 +1,29 @@
+# http://minimum-viable-automation.com/ansible/managing-users-accounts-ansible/      
+- name: create users
+  user:
+    name: "{{ item.name }}"
+    groups: "{{ item.groups }}"
+  loop: "{{ create_users }}"
+
+- name: set public ssh keys
+  authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ lookup('file', '../files/' + item.name + '.pub') }}"
+  loop: "{{ create_users }}"
+
+# https://www.reddit.com/r/ansible/comments/5xzj8b/how_to_modify_sudoers_file_with_ansible/
+- name: allow specified users to sudo
+  template: 
+    src: ../templates/my_sudoers.j2
+    dest: /etc/sudoers.d/my_sudoers
+    validate: 'visudo -cf %s'
+    mode: 0440
+  notify: restart_sshd     
+
+- name: delete users
+  user:
+    name: "{{ item }}"
+    state: absent
+    remove: yes
+    force: yes
+  loop: "{{ delete_users }}"

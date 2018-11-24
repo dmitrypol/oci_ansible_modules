@@ -9,3 +9,5 @@ fact_cache_folder/
 .terraform
 .terraform*
 terraform.*
+
+*.pub

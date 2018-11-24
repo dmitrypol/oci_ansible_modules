@@ -1,0 +1,5 @@
+{% for item in create_users %}
+{% if item.groups == ['sudo'] %}
+%{{ item.name }} ALL=(ALL:ALL) NOPASSWD:ALL
+{% endif %}
+{% endfor %}

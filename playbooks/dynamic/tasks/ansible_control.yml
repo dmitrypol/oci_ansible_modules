@@ -4,10 +4,12 @@
 
   vars:
     ansible_python_interpreter: /usr/bin/python3
+    ansible_dir: ~/ansible/
+    ansible_job: "cd {{ ansible_dir }} && ansible-playbook -i oci_inventory.py -e 'ansible_python_interpreter=/usr/bin/python3' tasks/*.yml"
     
   tasks:
 
-  - name: update repositories cache and install packages
+  - name: update repositories cache
     become: yes
     apt:
       name: software-properties-common
@@ -24,6 +26,8 @@
       name: 
         - ansible
         - python-pip
+        - rsync
+        - tree
 
   - name: install python packages
     become: yes
@@ -33,10 +37,10 @@
 
   - name: create directory to store ansible files
     file:
-      path: ~/ansible/
+      path: "{{ ansible_dir }}"
       state: directory
 
-  - name: upload files
+  - name: upload creds files
     copy:
       src:  "{{ item.src }}"
       dest: "{{ item.dest }}"
@@ -45,27 +49,31 @@
       - {src: '~/.ssh/id_rsa',          dest: '~/.ssh/'}
       - {src: '~/.oci/oci_api_key.pem', dest: '~/.oci/'}
       - {src: '~/.oci/config',          dest: '~/.oci/'}
-      - {src: '~/github/oci_ansible_modules/playbooks/dynamic/',                    dest: '~/ansible/'}
-      - {src: '~/github/oci_ansible_modules/oci-ansible-modules/inventory-script/', dest: '~/ansible/'}
+
+  - name: rsync playbooks and other files
+    synchronize:
+      src:  "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      rsync_opts:
+        - "--exclude=*.retry"
+        - "--exclude=ansible_control.yml"
+    loop:
+      - {src: '~/github/oci_ansible_modules/playbooks/dynamic/',                    dest: "{{ ansible_dir }}"}
+      - {src: '~/github/oci_ansible_modules/oci-ansible-modules/inventory-script/', dest: "{{ ansible_dir }}"}
 
   - name: set exec permissions on oci_inventory.py
     file:
-      path: ~/ansible/oci_inventory.py
+      path: "{{ ansible_dir }}oci_inventory.py"
       mode: u+x
-
-  - name: remove this playbook from the ansible control server
-    file:
-      path: ~/ansible/ansible_control.yml
-      state: absent
 
   - name: create ansible.cfg
     copy: 
-      content: "[defaults]\nhost_key_checking = False\nlog_path = ~/ansible.log"
-      dest: ~/ansible.cfg
+      content: "[defaults]\nhost_key_checking = False\nlog_path = {{ ansible_dir }}ansible.log"
+      dest: "{{ ansible_dir }}ansible.cfg"
 
   - name: cron for running ansible-playbook
     cron:
       name: 'ansible-playbook'
       minute: "*/5"
-      job: ansible-playbook -i ~/ansible/oci_inventory.py ~/ansible/*.yml -e 'ansible_python_interpreter=/usr/bin/python3'
+      job: "{{ ansible_job }}"
       state: present

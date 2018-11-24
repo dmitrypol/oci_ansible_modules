@@ -1,0 +1,18 @@
+---
+- name : provision app1 servers
+  hosts: tag_app_name=app1
+    
+  vars:
+    app_dir: ~/app1/
+
+  tasks:
+
+  - name: create app directory
+    file:
+      path: "{{ app_dir }}"
+      state: directory
+
+  - name: deploy the app
+    git:
+      repo: https://github.com/dmitrypol/django212
+      dest: "{{ app_dir }}"

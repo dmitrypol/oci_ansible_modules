@@ -1,0 +1,11 @@
+create_users:
+  - {name: 'user1', groups: [] }
+  - {name: 'user2', groups: [] }
+  - {name: 'sudo1', groups: ['sudo'] }
+  - {name: 'sudo2', groups: ['sudo'] }
+
+delete_users:
+  - {name: 'user3' }
+  - {name: 'user3' }
+  - {name: 'sudo3' }
+  - {name: 'sudo4' }
