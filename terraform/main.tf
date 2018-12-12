@@ -1,5 +1,6 @@
 module "ansible" {
   source = "modules/"
+  count  = 1
 
   freeform_tags = {
     app_name    = "ansible"
@@ -14,7 +15,7 @@ output "ansible_ip_output" {
 
 module "web1" {
   source = "modules/"
-  count  = 4
+  count  = 2
 
   freeform_tags = {
     app_name    = "app1"
@@ -29,7 +30,7 @@ output "web1_ip_output" {
 
 module "worker1" {
   source = "modules/"
-  count  = 2
+  count  = 1
   shape  = "VM.Standard1.2"
 
   freeform_tags = {
@@ -45,7 +46,7 @@ output "worker1_ip_output" {
 
 module "web2" {
   source = "modules/"
-  count  = 4
+  count  = 2
 
   freeform_tags = {
     app_name    = "app2"
@@ -60,7 +61,7 @@ output "web2_ip_output" {
 
 module "worker2" {
   source = "modules/"
-  count  = 2
+  count  = 1
   shape  = "VM.Standard1.2"
 
   freeform_tags = {

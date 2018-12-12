@@ -1,6 +1,6 @@
 ---
 - name : provision ansible control server
-  hosts: tag_app_name=ansible, tag_server_role=control
+  hosts: tag_app_name=ansible:&tag_server_role=control
 
   vars:
     ansible_python_interpreter: /usr/bin/python3
@@ -29,11 +29,15 @@
         - rsync
         - tree
 
+  # - name: install python packages
+  #   become: yes
+  #   pip:
+  #     name:
+  #       - oci==2.1.1
+
   - name: install python packages
     become: yes
-    pip:
-      name:
-        - oci==2.1.1
+    shell: pip install oci
 
   - name: create directory to store ansible files
     file:
