@@ -6,6 +6,7 @@
     ansible_python_interpreter: /usr/bin/python3
     ansible_dir: ~/ansible/
     ansible_job: "cd {{ ansible_dir }} && ansible-playbook -i oci_inventory.py -e 'ansible_python_interpreter=/usr/bin/python3' tasks/*.yml"
+    src_dir: ~/github/oci_ansible_modules
     
   tasks:
 
@@ -62,8 +63,8 @@
         - "--exclude=*.retry"
         - "--exclude=ansible_control.yml"
     loop:
-      - {src: '~/github/oci_ansible_modules/playbooks/dynamic/',                    dest: "{{ ansible_dir }}"}
-      - {src: '~/github/oci_ansible_modules/oci-ansible-modules/inventory-script/', dest: "{{ ansible_dir }}"}
+      - {src: "{{ src_dir }}/ansible/playbooks/dynamic/",            dest: "{{ ansible_dir }}"}
+      - {src: "{{ src_dir }}/oci-ansible-modules/inventory-script/", dest: "{{ ansible_dir }}"}
 
   - name: set exec permissions on oci_inventory.py
     file:

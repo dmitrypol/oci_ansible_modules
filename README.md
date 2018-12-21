@@ -20,11 +20,13 @@ terraform destroy -auto-approve && terraform apply -auto-approve
 Provision infrastructure from local machine by running specific playbook
 
 ```
+cd ansible
 ansible-playbook -i oci_inventory.py -e 'ansible_python_interpreter=/usr/bin/python3' playbooks/dynamic/tasks/env_prod.yml
 ```
 
 Provision Ansible control server that will manage infrastructure:
 
 ```
+cd ansible
 ansible-playbook -i oci_inventory.py playbooks/dynamic/tasks/ansible_control.yml
 ```
