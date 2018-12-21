@@ -10,4 +10,17 @@
       name: 
         - software-properties-common
         - nginx
-      update_cache: yes
+
+  - name: start services
+    service: 
+      name: "{{ item }}"
+      enabled: yes
+      state: started
+    loop:
+      - nginx
+
+  - name: touch file
+    become_user: ubuntu
+    file:
+      path: "~/web"
+      state: touch

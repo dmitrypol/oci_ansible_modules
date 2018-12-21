@@ -1,26 +1,28 @@
 ---
-- name : provision worker servers
-  hosts: tag_server_role=worker
+- hosts: default
   become: yes
-    
+
   tasks:
 
   - name: install packages
     apt:
-      name: 
+      name:
         - software-properties-common
+        - nginx
         - redis
+      state: present
+      update_cache: yes
 
-  - name: start services
-    service: 
+  - name: stop services
+    service:
       name: "{{ item }}"
-      enabled: yes
-      state: started
+      state: stopped
     loop:
+      - nginx
       - redis
 
   - name: touch file
     become_user: ubuntu
     file:
-      path: "~/worker"
+      path: "~/ubuntu1804_base_image"
       state: touch

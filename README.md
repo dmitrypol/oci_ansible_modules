@@ -5,6 +5,14 @@ Added oci-ansible-modules as GIT submodule per https://git-scm.com/book/en/v2/Gi
 git submodule add https://github.com/oracle/oci-ansible-modules
 ```
 
+Create custom image to use:
+
+```
+cd packer && packer build ubuntu.json
+```
+
+Need to specifyt `ailability_domain`, `compartment_ocid` and `subnet_ocid` environment variables.  Once image is created put the ID in `vars.tf` under `image_source_id`.  
+
 Launch infrastructure:
 
 ```

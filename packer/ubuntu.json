@@ -1,0 +1,32 @@
+{
+    "builders": [
+      {
+        "availability_domain": "{{ user `availability_domain`}}",
+        "base_image_ocid": "ocid1.image.oc1.iad.aaaaaaaapx7m52arfwbm25ka5bqb7dcka64suou5yth7erg3ywgqorvq4doq",
+        "compartment_ocid": "{{ user `compartment_ocid`}}",
+        "image_name": "ubuntu1804_image_{{timestamp}}",
+        "shape": "VM.Standard1.1",
+        "ssh_username": "ubuntu",
+        "subnet_ocid": "{{ user `subnet_ocid`}}",
+        "type": "oracle-oci"
+      }
+    ],
+    "description": "used to create images on OCI",
+    "min_packer_version": "1.3.1",
+    "provisioners": [
+      {
+        "extra_arguments": [ 
+          "--extra-vars", "ansible_python_interpreter=/usr/bin/python3"
+          ],
+        "pause_before": "1s",
+        "playbook_file": "playbook.yml",
+        "type": "ansible",
+        "user": "ubuntu"
+      }
+    ],
+    "variables": {
+      "availability_domain": "{{ env `availability_domain`}}",
+      "compartment_ocid": "{{ env `compartment_ocid`}}",
+      "subnet_ocid": "{{ env `subnet_ocid`}}"
+    }
+  }
