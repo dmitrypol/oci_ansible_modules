@@ -2,6 +2,7 @@
 - name : provision worker servers
   hosts: tag_server_role=worker
   become: yes
+  strategy: free 
     
   tasks:
 

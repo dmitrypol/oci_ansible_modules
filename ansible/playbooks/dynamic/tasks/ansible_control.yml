@@ -1,12 +1,13 @@
 ---
 - name : provision ansible control server
   hosts: tag_app_name=ansible:&tag_server_role=control
+  gather_facts: no 
 
   vars:
     ansible_python_interpreter: /usr/bin/python3
     ansible_dir: ~/ansible/
     ansible_job: "cd {{ ansible_dir }} && ansible-playbook -i oci_inventory.py -e 'ansible_python_interpreter=/usr/bin/python3' tasks/*.yml"
-    src_dir: ~/github/oci_ansible_modules
+    src_dir: ~/github/oci_ansible_modules/
     
   tasks:
 
@@ -63,8 +64,8 @@
         - "--exclude=*.retry"
         - "--exclude=ansible_control.yml"
     loop:
-      - {src: "{{ src_dir }}/ansible/playbooks/dynamic/",            dest: "{{ ansible_dir }}"}
-      - {src: "{{ src_dir }}/oci-ansible-modules/inventory-script/", dest: "{{ ansible_dir }}"}
+      - {src: "{{ src_dir }}ansible/playbooks/dynamic/",            dest: "{{ ansible_dir }}"}
+      - {src: "{{ src_dir }}oci-ansible-modules/inventory-script/", dest: "{{ ansible_dir }}"}
 
   - name: set exec permissions on oci_inventory.py
     file:
@@ -73,7 +74,8 @@
 
   - name: create ansible.cfg
     copy: 
-      content: "[defaults]\nhost_key_checking = False\nlog_path = {{ ansible_dir }}ansible.log"
+      # content: "[defaults]\nhost_key_checking = False"
+      src: "{{ src_dir }}ansible/ansible_control.cfg"
       dest: "{{ ansible_dir }}ansible.cfg"
 
   - name: cron for running ansible-playbook

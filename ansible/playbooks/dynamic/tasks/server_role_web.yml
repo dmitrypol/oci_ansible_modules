@@ -2,6 +2,7 @@
 - name : provision web servers
   hosts: tag_server_role=web
   become: yes
+  strategy: free 
     
   tasks:
 

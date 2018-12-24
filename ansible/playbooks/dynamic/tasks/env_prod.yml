@@ -2,6 +2,7 @@
 - name : provision prod servers
   hosts: tag_env=prod
   become: yes
+  strategy: free 
 
   vars_files:
     - ../vars/prod_users.yml

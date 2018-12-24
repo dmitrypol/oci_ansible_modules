@@ -1,6 +1,7 @@
 ---
 - name : provision app2 servers
   hosts: tag_app_name=app2
+  strategy: free 
 
   vars:
     app_dir: ~/app2/

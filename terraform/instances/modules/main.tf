@@ -1,10 +1,10 @@
 resource "oci_core_instance" "default" {
   count               = "${var.count}"
-  availability_domain = "${var.availability_domain}"
   compartment_id      = "${var.compartment_ocid}"
   display_name        = "${var.freeform_tags["env"]}_${var.freeform_tags["app_name"]}_${var.freeform_tags["server_role"]}_${count.index}"
   shape               = "${var.shape}"
-  subnet_id           = "${var.subnet_id}"
+  availability_domain = "${element(var.availability_domains, count.index)}"
+  subnet_id           = "${element(var.subnet_ids, count.index)}"
 
   source_details {
     source_type = "image"

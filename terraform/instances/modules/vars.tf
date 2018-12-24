@@ -13,11 +13,9 @@ variable "shape" {
 }
 
 variable "image_source_id" {
-  # ubuntu 16.04    
-  # default = "ocid1.image.oc1.iad.aaaaaaaaau7nws7rghq6ob22m5hqsf7gugskz7hm53n4tuv3kcpvgwio5kdq"
+  # ubuntu 16.04      # default = "ocid1.image.oc1.iad.aaaaaaaaau7nws7rghq6ob22m5hqsf7gugskz7hm53n4tuv3kcpvgwio5kdq"
 
-  # ubuntu 18.04
-  # default = "ocid1.image.oc1.iad.aaaaaaaapx7m52arfwbm25ka5bqb7dcka64suou5yth7erg3ywgqorvq4doq"
+  # ubuntu 18.04  # default = "ocid1.image.oc1.iad.aaaaaaaapx7m52arfwbm25ka5bqb7dcka64suou5yth7erg3ywgqorvq4doq"
 
   # custom ubuntu 18.04 w nginx and redis installed and stopped via Packer
   default = "ocid1.image.oc1.iad.aaaaaaaadx25j6b4jofh3warvmw4hbquyba3lanwte5r37mqitmqxlonf6qa"

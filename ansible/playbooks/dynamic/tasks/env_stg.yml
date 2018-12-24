@@ -1,6 +1,7 @@
 ---
 - name : provision stg servers
   hosts: tag_env=stg
+  strategy: free 
     
   tasks:
 
