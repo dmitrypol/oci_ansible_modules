@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 #pyopenssl = ">=17.5.0"
-ansible = "==2.9.3"
+ansible = "==4.2.0"
 oci = "==2.10.0"
 
 [dev-packages]
